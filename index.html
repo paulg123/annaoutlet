@@ -25,6 +25,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#1a1a1a}
 .field textarea{resize:vertical;min-height:56px}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 .itemno-display{font-size:26px;font-weight:700;letter-spacing:.1em;text-align:center;padding:14px;background:#f5f5f2;border-radius:10px;margin-bottom:14px;border:1px solid #e8e8e4}
 .preview-label{color:#888;font-size:12px;font-weight:400;display:block;margin-bottom:4px;letter-spacing:0}
 .batch-hint{font-size:11px;color:#999;margin-top:4px}
@@ -32,6 +33,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .photo-area img{max-width:100%;max-height:150px;border-radius:8px;object-fit:cover}
 .photo-placeholder{color:#999;font-size:13px}
 .photo-area input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.save-photo-btn{width:100%;padding:11px;font-size:14px;font-weight:500;border:1px solid #27ae60;border-radius:10px;background:#f0fff4;color:#27ae60;cursor:pointer;margin-top:8px;display:none;align-items:center;justify-content:center;gap:6px}
+.save-photo-btn.visible{display:flex}
 .scan-btn{width:100%;padding:13px;font-size:14px;font-weight:500;border:1px solid #ddd;border-radius:10px;background:#fff;color:#1a1a1a;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
 .primary-btn{width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:10px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;margin-top:4px}
 .primary-btn:active{opacity:.85}
@@ -39,6 +42,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .danger-btn{background:#c0392b;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600}
 .success-btn{background:#27ae60;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600}
 .warn-btn{background:#e67e22;color:#fff;border:none;padding:11px;font-size:14px;border-radius:8px;cursor:pointer;font-weight:600;width:100%;margin-bottom:10px}
+.price-tag{display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:13px;font-weight:700;padding:3px 10px;border-radius:99px}
 .item-card{background:#fff;border:1px solid #ebebeb;border-radius:14px;margin-bottom:12px;overflow:hidden}
 .card-header{display:flex;align-items:center;gap:12px;padding:12px;cursor:pointer}
 .item-thumb{width:52px;height:52px;object-fit:cover;border-radius:8px;background:#f0f0ec;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px}
@@ -52,7 +56,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dr:last-of-type{border-bottom:none}
 .dr span:first-child{color:#888;flex-shrink:0}
 .dr span:last-child{text-align:right;word-break:break-all}
-.dr a{color:#1a6fc4;text-decoration:none}
 .barcode-wrap{text-align:center;margin:10px 0;background:#fff;padding:8px;border-radius:8px;border:1px solid #ebebeb}
 .barcode-wrap canvas{max-width:100%}
 .bc-num{font-size:11px;color:#999;margin-top:2px;letter-spacing:.05em}
@@ -66,10 +69,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .filter-row{padding:8px 0 0;display:flex;gap:8px}
 .filter-row select{padding:7px 10px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;-webkit-appearance:none;flex:1}
 .empty-state{text-align:center;padding:48px 16px;color:#999;font-size:14px}
-.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
-.stat-card{background:#f5f5f2;border-radius:10px;padding:12px;text-align:center}
-.stat-card .num{font-size:22px;font-weight:700}
-.stat-card .lbl{font-size:11px;color:#888;margin-top:2px}
+.stats-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.stat-card{background:#f5f5f2;border-radius:10px;padding:10px;text-align:center}
+.stat-card .num{font-size:18px;font-weight:700}
+.stat-card .lbl{font-size:10px;color:#888;margin-top:2px}
 .scanner-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;flex-direction:column;align-items:center;justify-content:center}
 .scanner-modal.open{display:flex}
 .scanner-inner{background:#fff;border-radius:16px;padding:20px;width:90%;max-width:380px}
@@ -86,7 +89,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .sheet-badge{display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:10px}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
-.help-text{font-size:12px;color:#777;margin-top:6px}
+.currency{position:relative}
+.currency-symbol{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#888;font-size:15px;pointer-events:none}
+.currency input{padding-left:24px}
 </style>
 </head>
 <body>
@@ -96,7 +101,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <button class="secondary-btn" onclick="exportCSV()">CSV</button>
     <button class="success-btn" onclick="syncToSheets()">Sync</button>
   </div>
-
   <div class="tabs">
     <div class="tab active" id="tab-add" onclick="showTab('add')">Add Item</div>
     <div class="tab" id="tab-inventory" onclick="showTab('inventory')">Inventory</div>
@@ -105,93 +109,49 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 
   <div class="panel active" id="panel-add">
     <div class="itemno-display" id="itemno-preview"><span class="preview-label">Item Number</span>—</div>
-
     <div class="row2">
-      <div class="field">
-        <label>Batch #</label>
-        <input type="number" id="f-batch" min="1" max="999" value="1" oninput="updateItemNoPreview()">
-        <div class="batch-hint">001 = first batch</div>
-      </div>
-      <div class="field">
-        <label>Item # in batch</label>
-        <input type="number" id="f-itemseq" min="1" max="999" placeholder="Auto" oninput="updateItemNoPreview()">
-        <div class="batch-hint">blank = auto-number</div>
-      </div>
+      <div class="field"><label>Batch #</label><input type="number" id="f-batch" min="1" max="999" value="1" oninput="updateItemNoPreview()"><div class="batch-hint">001 = first batch</div></div>
+      <div class="field"><label>Item # in batch</label><input type="number" id="f-itemseq" min="1" max="999" placeholder="Auto" oninput="updateItemNoPreview()"><div class="batch-hint">blank = auto-number</div></div>
     </div>
-
-    <div class="field">
-      <label>Item Name</label>
-      <input type="text" id="f-name" placeholder="e.g. Levi's 501 Jeans">
-    </div>
-
-    <div class="field">
-      <label>Barcode / SKU <span style="font-size:11px;color:#999;">(blank = use item number)</span></label>
-      <input type="text" id="f-barcode" placeholder="Scan or type">
-    </div>
-
+    <div class="field"><label>Item Name</label><input type="text" id="f-name" placeholder="e.g. Levi's 501 Jeans"></div>
+    <div class="field"><label>Barcode / SKU <span style="font-size:11px;color:#999;">(blank = use item number)</span></label><input type="text" id="f-barcode" placeholder="Scan or type"></div>
     <div class="row2">
-      <div class="field">
-        <label>Category</label>
-        <select id="f-cat">
-          <option>Tops</option>
-          <option>Bottoms</option>
-          <option>Outerwear</option>
-          <option>Dresses</option>
-          <option>Footwear</option>
-          <option>Accessories</option>
-          <option>Other</option>
-        </select>
+      <div class="field"><label>Category</label>
+        <select id="f-cat"><option>Tops</option><option>Bottoms</option><option>Outerwear</option><option>Dresses</option><option>Footwear</option><option>Accessories</option><option>Other</option></select>
       </div>
-      <div class="field">
-        <label>Size</label>
-        <input type="text" id="f-size" placeholder="S / M / 32W">
+      <div class="field"><label>Size</label><input type="text" id="f-size" placeholder="S / M / 32W"></div>
+    </div>
+    <div class="row3">
+      <div class="field"><label>Color</label><input type="text" id="f-color" placeholder="Navy"></div>
+      <div class="field"><label>Quantity</label><input type="number" id="f-qty" value="1" min="0"></div>
+      <div class="field"><label>Price</label>
+        <div class="currency">
+          <span class="currency-symbol">$</span>
+          <input type="number" id="f-price" placeholder="0.00" step="0.01" min="0">
+        </div>
       </div>
     </div>
-
-    <div class="row2">
-      <div class="field">
-        <label>Color</label>
-        <input type="text" id="f-color" placeholder="Navy Blue">
-      </div>
-      <div class="field">
-        <label>Quantity</label>
-        <input type="number" id="f-qty" value="1" min="0">
-      </div>
-    </div>
-
-    <div class="field">
-      <label>Notes</label>
-      <textarea id="f-notes" placeholder="Brand, condition, location..."></textarea>
-    </div>
-
-    <div class="field">
-      <label>Photo</label>
+    <div class="field"><label>Notes</label><textarea id="f-notes" placeholder="Brand, condition, location..."></textarea></div>
+    <div class="field"><label>Photo</label>
       <div class="photo-area">
         <input type="file" accept="image/*" capture="environment" onchange="handlePhoto(event)" id="photo-input">
         <div class="photo-placeholder" id="photo-placeholder">📷 Tap to take photo or upload</div>
         <img id="photo-preview" style="display:none">
       </div>
+      <button class="save-photo-btn" id="save-photo-btn" onclick="savePhotoToDevice()">
+        💾 Save photo to device as item number
+      </button>
     </div>
-
     <button class="scan-btn" onclick="openScanner()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-        <rect x="3" y="3" width="18" height="18" rx="2"></rect>
-        <line x1="3" y1="9" x2="21" y2="9"></line>
-        <line x1="3" y1="15" x2="21" y2="15"></line>
-        <line x1="9" y1="3" x2="9" y2="21"></line>
-        <line x1="15" y1="3" x2="15" y2="21"></line>
-      </svg>
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
       Scan Barcode with Camera
     </button>
-
     <button class="primary-btn" onclick="addItem()">Add to Inventory</button>
   </div>
 
   <div class="panel" id="panel-inventory">
     <div class="stats-row" id="stats-row"></div>
-    <div class="search-bar">
-      <input type="text" id="search-input" placeholder="Search name, SKU, batch..." oninput="renderInventory()">
-    </div>
+    <div class="search-bar"><input type="text" id="search-input" placeholder="Search name, SKU, batch, color..." oninput="renderInventory()"></div>
     <div class="filter-row">
       <select id="filter-batch" onchange="renderInventory()"><option value="">All batches</option></select>
       <select id="filter-cat" onchange="renderInventory()"><option value="">All categories</option></select>
@@ -203,33 +163,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="sheets-section">
       <h3>Google Sheets Sync</h3>
       <div><span class="sheet-badge">Tab: AnnaOutlet Inventory</span></div>
-      <div class="field">
-        <label>Sheet ID (from URL)</label>
-        <input type="text" id="sheet-id" placeholder="Paste Sheet ID here" oninput="saveSettings()">
-      </div>
-      <div class="field">
-        <label>Apps Script Web App URL</label>
-        <input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" oninput="saveSettings()">
-      </div>
+      <div class="field"><label>Sheet ID (from URL)</label><input type="text" id="sheet-id" placeholder="Paste Sheet ID here" oninput="saveSettings()"></div>
+      <div class="field"><label>Apps Script Web App URL</label><input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" oninput="saveSettings()"></div>
       <div style="display:flex;align-items:center;margin-bottom:12px;">
         <span class="dot" id="sync-dot"></span>
         <span id="sync-status" style="font-size:13px;color:#888;">Not configured</span>
       </div>
-      <div class="help-text">Both Sheet ID and deployed Apps Script URL must be present.</div>
-      <button class="success-btn" style="width:100%;padding:13px;font-size:15px;margin:10px 0;" onclick="syncToSheets()">Sync Now</button>
+      <button class="success-btn" style="width:100%;padding:13px;font-size:15px;margin-bottom:10px;" onclick="syncToSheets()">Sync Now</button>
       <button class="warn-btn" onclick="resetSyncStatus()">Force Re-Sync All Items</button>
       <button class="scan-btn" onclick="copyAppsScript()">Copy Apps Script Code</button>
     </div>
-
     <div class="sheets-section">
       <h3>Batch Settings</h3>
-      <div class="field">
-        <label>Default Batch Number</label>
-        <input type="number" id="s-batch" min="1" max="999" value="1" oninput="saveSettings()">
-      </div>
+      <div class="field"><label>Default Batch Number</label><input type="number" id="s-batch" min="1" max="999" value="1" oninput="saveSettings()"></div>
       <p style="font-size:12px;color:#999;margin-top:4px;">Format: BBB-III — e.g. batch 2, item 7 = 002-007</p>
     </div>
-
     <div class="sheets-section">
       <h3>Data</h3>
       <div style="display:flex;gap:8px;">
@@ -244,810 +192,309 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   <div class="scanner-inner">
     <p style="font-size:14px;font-weight:600;margin-bottom:10px;">Point camera at barcode</p>
     <video class="scanner-video" id="scanner-video" autoplay playsinline muted></video>
-    <div id="reader" style="display:none;"></div>
     <canvas id="scanner-canvas" style="display:none"></canvas>
     <p id="scan-status" style="font-size:13px;color:#888;margin-bottom:12px;text-align:center;">Scanning...</p>
     <button class="scan-btn" onclick="closeScanner()">Cancel</button>
   </div>
 </div>
-
 <div class="toast" id="toast"></div>
 <canvas id="compress-canvas" style="display:none"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-const SHEET_TAB = 'AnnaOutlet Inventory';
-const MAX_PHOTO_SIZE = 600;
-const PHOTO_QUALITY = 0.6;
-
-let inventory = JSON.parse(localStorage.getItem('annaoutlet_inv') || '[]');
-let settings = JSON.parse(localStorage.getItem('annaoutlet_settings') || '{"sheetId":"","appsScriptUrl":"","currentBatch":1}');
-let photoDataUrl = null;
-let scanInterval = null;
-let scanStream = null;
-let html5QrScanner = null;
-let scannerMode = null;
+const SHEET_TAB='AnnaOutlet Inventory';
+let inventory=JSON.parse(localStorage.getItem('annaoutlet_inv')||'[]');
+let settings=JSON.parse(localStorage.getItem('annaoutlet_settings')||'{"sheetId":"","appsScriptUrl":"","currentBatch":1}');
+let photoDataUrl=null,scanInterval=null,scanStream=null,currentItemNo='001-001';
 
 function showTab(t){
-  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab').forEach(function(tb){ tb.classList.remove('active'); });
-  document.getElementById('panel-' + t).classList.add('active');
-  document.getElementById('tab-' + t).classList.add('active');
-  if (t === 'inventory') { updateFilters(); renderInventory(); }
-  if (t === 'settings') { loadSettings(); }
-  if (t === 'add') { updateItemNoPreview(); }
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab').forEach(function(tb){tb.classList.remove('active');});
+  document.getElementById('panel-'+t).classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+  if(t==='inventory'){renderInventory();updateFilters();}
+  if(t==='settings'){loadSettings();}
+  if(t==='add'){updateItemNoPreview();}
 }
-
-function save(){
-  localStorage.setItem('annaoutlet_inv', JSON.stringify(inventory));
-}
-
+function save(){localStorage.setItem('annaoutlet_inv',JSON.stringify(inventory));}
 function saveSettings(){
-  settings.sheetId = (document.getElementById('sheet-id').value || '').trim();
-  settings.appsScriptUrl = (document.getElementById('apps-script-url').value || '').trim();
-  settings.currentBatch = parseInt(document.getElementById('s-batch').value, 10) || 1;
-  localStorage.setItem('annaoutlet_settings', JSON.stringify(settings));
+  settings.sheetId=(document.getElementById('sheet-id').value||'').trim();
+  settings.appsScriptUrl=(document.getElementById('apps-script-url').value||'').trim();
+  settings.currentBatch=parseInt(document.getElementById('s-batch').value)||1;
+  localStorage.setItem('annaoutlet_settings',JSON.stringify(settings));
   updateSyncStatus();
 }
-
-function pad3(n){
-  return String(parseInt(n, 10) || 1).padStart(3, '0');
-}
-
+function pad3(n){return String(parseInt(n)||1).padStart(3,'0');}
 function nextItemSeq(batch){
-  var b = inventory.filter(function(i){ return i.batchNum === parseInt(batch, 10); });
-  return b.length ? Math.max.apply(null, b.map(function(i){ return i.itemSeq; })) + 1 : 1;
+  var b=inventory.filter(function(i){return i.batchNum===parseInt(batch);});
+  return b.length?Math.max.apply(null,b.map(function(i){return i.itemSeq;}))+1:1;
 }
-
-function formatItemNo(batch, seq){
-  return pad3(batch) + '-' + pad3(seq);
-}
-
+function formatItemNo(batch,seq){return pad3(batch)+'-'+pad3(seq);}
 function updateItemNoPreview(){
-  var batch = document.getElementById('f-batch').value || settings.currentBatch;
-  var seq = document.getElementById('f-itemseq').value || nextItemSeq(batch);
-  document.getElementById('itemno-preview').innerHTML =
-    '<span class="preview-label">Item Number</span>' + formatItemNo(batch, seq);
+  var batch=document.getElementById('f-batch').value||settings.currentBatch;
+  var seq=document.getElementById('f-itemseq').value||nextItemSeq(batch);
+  currentItemNo=formatItemNo(batch,seq);
+  document.getElementById('itemno-preview').innerHTML='<span class="preview-label">Item Number</span>'+currentItemNo;
 }
-
 function loadSettings(){
-  document.getElementById('sheet-id').value = settings.sheetId || '';
-  document.getElementById('apps-script-url').value = settings.appsScriptUrl || '';
-  document.getElementById('s-batch').value = settings.currentBatch || 1;
+  document.getElementById('sheet-id').value=settings.sheetId||'';
+  document.getElementById('apps-script-url').value=settings.appsScriptUrl||'';
+  document.getElementById('s-batch').value=settings.currentBatch||1;
   updateSyncStatus();
 }
-
 function updateSyncStatus(){
-  var dot = document.getElementById('sync-dot');
-  var txt = document.getElementById('sync-status');
-
-  if (settings.appsScriptUrl && settings.sheetId) {
-    dot.className = 'dot green';
-    txt.textContent = 'Ready to sync';
-  } else if (settings.sheetId || settings.appsScriptUrl) {
-    dot.className = 'dot amber';
-    txt.textContent = 'Incomplete sync setup';
-  } else {
-    dot.className = 'dot';
-    txt.textContent = 'Not configured';
-  }
+  var dot=document.getElementById('sync-dot'),txt=document.getElementById('sync-status');
+  if(settings.appsScriptUrl){dot.className='dot green';txt.textContent='Ready to sync';}
+  else if(settings.sheetId){dot.className='dot amber';txt.textContent='Add Apps Script URL';}
+  else{dot.className='dot';txt.textContent='Not configured';}
 }
-
 function resetSyncStatus(){
-  if (!confirm('This will resend all items to Google Sheets. Continue?')) return;
-  inventory.forEach(function(i){ i.synced = false; });
+  if(!confirm('This will resend all items to Google Sheets. Continue?'))return;
+  inventory.forEach(function(i){i.synced=false;});
   save();
   showToast('All items marked for re-sync. Tap Sync Now!');
 }
-
-function compressPhoto(dataUrl){
-  return new Promise(function(resolve, reject){
-    var img = new Image();
-    img.onload = function(){
-      var w = img.width;
-      var h = img.height;
-
-      if (w > MAX_PHOTO_SIZE || h > MAX_PHOTO_SIZE) {
-        if (w > h) {
-          h = Math.round(h * MAX_PHOTO_SIZE / w);
-          w = MAX_PHOTO_SIZE;
-        } else {
-          w = Math.round(w * MAX_PHOTO_SIZE / h);
-          h = MAX_PHOTO_SIZE;
-        }
-      }
-
-      var canvas = document.getElementById('compress-canvas');
-      var ctx = canvas.getContext('2d');
-      canvas.width = w;
-      canvas.height = h;
-      ctx.clearRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
-
-      try {
-        resolve(canvas.toDataURL('image/jpeg', PHOTO_QUALITY));
-      } catch (err) {
-        reject(err);
-      }
-    };
-    img.onerror = reject;
-    img.src = dataUrl;
-  });
-}
-
 function handlePhoto(e){
-  var file = e.target.files[0];
-  if (!file) return;
-
-  var r = new FileReader();
-  r.onload = function(ev){
-    photoDataUrl = ev.target.result;
-    document.getElementById('photo-preview').src = photoDataUrl;
-    document.getElementById('photo-preview').style.display = 'block';
-    document.getElementById('photo-placeholder').style.display = 'none';
+  var file=e.target.files[0];if(!file)return;
+  var r=new FileReader();
+  r.onload=function(ev){
+    photoDataUrl=ev.target.result;
+    document.getElementById('photo-preview').src=photoDataUrl;
+    document.getElementById('photo-preview').style.display='block';
+    document.getElementById('photo-placeholder').style.display='none';
+    document.getElementById('save-photo-btn').classList.add('visible');
   };
   r.readAsDataURL(file);
 }
 
-function resetAddForm(){
-  ['f-name', 'f-barcode', 'f-size', 'f-color', 'f-notes'].forEach(function(id){
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('f-qty').value = '1';
-  document.getElementById('f-itemseq').value = '';
-  document.getElementById('f-cat').value = 'Tops';
-  photoDataUrl = null;
-  document.getElementById('photo-preview').style.display = 'none';
-  document.getElementById('photo-preview').src = '';
-  document.getElementById('photo-placeholder').style.display = '';
-  document.getElementById('photo-input').value = '';
-  updateItemNoPreview();
+function savePhotoToDevice(){
+  if(!photoDataUrl){showToast('No photo to save');return;}
+  var itemNo=currentItemNo;
+  var a=document.createElement('a');
+  a.href=photoDataUrl;
+  a.download=itemNo+'.jpg';
+  a.click();
+  showToast('Photo saved as '+itemNo+'.jpg — upload to Drive!');
+}
+
+function saveItemPhotoFromCard(id){
+  var item=inventory.find(function(i){return i.id===id;});
+  if(!item||!item.photo){showToast('No photo for this item');return;}
+  var a=document.createElement('a');
+  a.href=item.photo;
+  a.download=item.itemNo+'.jpg';
+  a.click();
+  showToast('Photo saved as '+item.itemNo+'.jpg');
 }
 
 function addItem(){
-  var name = document.getElementById('f-name').value.trim();
-  if (!name) {
-    showToast('Please enter an item name');
-    return;
-  }
-
-  var batch = parseInt(document.getElementById('f-batch').value, 10) || settings.currentBatch;
-  var seqInput = document.getElementById('f-itemseq').value;
-  var seq = seqInput ? parseInt(seqInput, 10) : nextItemSeq(batch);
-  var itemNo = formatItemNo(batch, seq);
-
-  if (inventory.find(function(i){ return i.itemNo === itemNo; })) {
-    showToast(itemNo + ' already exists!');
-    return;
-  }
-
-  var barcode = document.getElementById('f-barcode').value.trim() || itemNo;
-
-  var item = {
-    id: Date.now(),
-    itemNo: itemNo,
-    batchNum: batch,
-    itemSeq: seq,
-    name: name,
-    barcode: barcode,
-    category: document.getElementById('f-cat').value,
-    size: document.getElementById('f-size').value.trim(),
-    color: document.getElementById('f-color').value.trim(),
-    qty: parseInt(document.getElementById('f-qty').value, 10) || 1,
-    notes: document.getElementById('f-notes').value.trim(),
-    photo: photoDataUrl,
-    photoUrl: '',
-    added: new Date().toLocaleDateString(),
-    synced: false
-  };
-
-  inventory.unshift(item);
-  save();
-  resetAddForm();
-  showToast('Added ' + itemNo + ' — ' + name);
+  var name=document.getElementById('f-name').value.trim();
+  if(!name){showToast('Please enter an item name');return;}
+  var batch=parseInt(document.getElementById('f-batch').value)||settings.currentBatch;
+  var seqInput=document.getElementById('f-itemseq').value;
+  var seq=seqInput?parseInt(seqInput):nextItemSeq(batch);
+  var itemNo=formatItemNo(batch,seq);
+  if(inventory.find(function(i){return i.itemNo===itemNo;})){showToast(itemNo+' already exists!');return;}
+  var barcode=document.getElementById('f-barcode').value.trim()||itemNo;
+  var price=parseFloat(document.getElementById('f-price').value)||0;
+  var item={id:Date.now(),itemNo:itemNo,batchNum:batch,itemSeq:seq,name:name,barcode:barcode,
+    category:document.getElementById('f-cat').value,
+    size:document.getElementById('f-size').value.trim(),
+    color:document.getElementById('f-color').value.trim(),
+    qty:parseInt(document.getElementById('f-qty').value)||1,
+    price:price,
+    notes:document.getElementById('f-notes').value.trim(),
+    photo:photoDataUrl,
+    added:new Date().toLocaleDateString(),synced:false};
+  inventory.unshift(item);save();
+  ['f-name','f-barcode','f-size','f-color','f-notes'].forEach(function(id){document.getElementById(id).value='';});
+  document.getElementById('f-qty').value='1';
+  document.getElementById('f-price').value='';
+  document.getElementById('f-itemseq').value='';
+  document.getElementById('f-cat').value='Tops';
+  photoDataUrl=null;
+  document.getElementById('photo-preview').style.display='none';
+  document.getElementById('photo-preview').src='';
+  document.getElementById('photo-placeholder').style.display='';
+  document.getElementById('photo-input').value='';
+  document.getElementById('save-photo-btn').classList.remove('visible');
+  showToast('Added '+itemNo+' \u2014 '+name);
+  updateItemNoPreview();
   showTab('inventory');
 }
-
 function catEmoji(cat){
-  return {
-    Tops:'👕',
-    Bottoms:'👖',
-    Outerwear:'🧥',
-    Dresses:'👗',
-    Footwear:'👟',
-    Accessories:'👜',
-    Other:'📦'
-  }[cat] || '👔';
+  return{Tops:'\ud83d\udc55',Bottoms:'\ud83d\udc56',Outerwear:'\ud83e\udde5',Dresses:'\ud83d\udc57',Footwear:'\ud83d\udc5f',Accessories:'\ud83d\udc5c',Other:'\ud83d\udce6'}[cat]||'\ud83d\udc54';
 }
-
+function formatPrice(p){return p?'$'+parseFloat(p).toFixed(2):'';}
 function renderInventory(){
-  var q = (document.getElementById('search-input').value || '').toLowerCase();
-  var fb = document.getElementById('filter-batch').value;
-  var fc = document.getElementById('filter-cat').value;
-  var list = document.getElementById('inventory-list');
-
-  var filtered = inventory.filter(function(i){
-    return (!fb || String(i.batchNum) === fb) &&
-           (!fc || i.category === fc) &&
-           (!q || [i.name, i.category, i.barcode, i.itemNo, i.color, i.size, i.notes].some(function(v){
-             return (v || '').toLowerCase().includes(q);
-           }));
+  var q=(document.getElementById('search-input').value||'').toLowerCase();
+  var fb=document.getElementById('filter-batch').value;
+  var fc=document.getElementById('filter-cat').value;
+  var list=document.getElementById('inventory-list');
+  var filtered=inventory.filter(function(i){
+    return(!fb||String(i.batchNum)===fb)&&(!fc||i.category===fc)&&
+    (!q||[i.name,i.category,i.barcode,i.itemNo,i.color,i.size].some(function(v){return(v||'').toLowerCase().includes(q);}));
   });
-
-  var total = inventory.reduce(function(s, i){ return s + i.qty; }, 0);
-  var batches = [...new Set(inventory.map(function(i){ return i.batchNum; }))].length;
-
-  document.getElementById('stats-row').innerHTML =
-    '<div class="stat-card"><div class="num">' + inventory.length + '</div><div class="lbl">Items</div></div>' +
-    '<div class="stat-card"><div class="num">' + total + '</div><div class="lbl">Total qty</div></div>' +
-    '<div class="stat-card"><div class="num">' + batches + '</div><div class="lbl">Batches</div></div>';
-
-  if (!filtered.length) {
-    list.innerHTML = '<div class="empty-state">' + (inventory.length ? 'No results.' : 'No items yet — add your first!') + '</div>';
-    return;
-  }
-
-  var tagColor = {
-    Tops:'tag-blue',
-    Bottoms:'tag-blue',
-    Outerwear:'tag-amber',
-    Dresses:'tag-green',
-    Footwear:'tag-amber',
-    Accessories:'tag-green',
-    Other:'tag-blue'
-  };
-
-  list.innerHTML = filtered.map(function(item){
-    var photoRow = item.photoUrl
-      ? '<div class="dr"><span>Photo</span><span><a href="' + item.photoUrl + '" target="_blank" rel="noopener noreferrer">🖼 View in Drive</a></span></div>'
-      : (item.photo ? '<div class="dr"><span>Photo</span><span style="color:#f39c12">● saved locally</span></div>' : '');
-
-    return '<div class="item-card">' +
-      '<div class="card-header" onclick="toggleCard(' + item.id + ')">' +
-        (item.photo ? '<img class="item-thumb" src="' + item.photo + '">' : '<div class="item-thumb">' + catEmoji(item.category) + '</div>') +
-        '<div class="item-info">' +
-          '<div class="iname">' + escapeHtml(item.name) + '</div>' +
-          '<div class="imeta"><b>' + item.itemNo + '</b> · <span class="tag ' + (tagColor[item.category] || 'tag-blue') + '">' + escapeHtml(item.category) + '</span>' +
-          (item.size ? ' · ' + escapeHtml(item.size) : '') +
-          ' <span style="font-size:10px;color:' + (item.synced ? '#27ae60' : '#f39c12') + '">' + (item.synced ? '● synced' : '● local') + '</span></div>' +
-        '</div>' +
-        '<div class="qty-badge">×' + item.qty + '</div>' +
-      '</div>' +
-      '<div class="card-body" id="body-' + item.id + '">' +
-        (item.photo ? '<img src="' + item.photo + '" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:10px;">' : '') +
-        '<div class="dr"><span>Item #</span><span><b>' + item.itemNo + '</b></span></div>' +
-        '<div class="dr"><span>Batch</span><span>' + pad3(item.batchNum) + '</span></div>' +
-        '<div class="dr"><span>Barcode</span><span>' + escapeHtml(item.barcode) + '</span></div>' +
-        (item.size ? '<div class="dr"><span>Size</span><span>' + escapeHtml(item.size) + '</span></div>' : '') +
-        (item.color ? '<div class="dr"><span>Color</span><span>' + escapeHtml(item.color) + '</span></div>' : '') +
-        (item.notes ? '<div class="dr"><span>Notes</span><span>' + escapeHtml(item.notes) + '</span></div>' : '') +
-        photoRow +
-        '<div class="dr"><span>Added</span><span>' + escapeHtml(item.added) + '</span></div>' +
-        '<div class="barcode-wrap"><canvas id="bc-' + item.id + '"></canvas><div class="bc-num">' + escapeHtml(item.barcode) + '</div></div>' +
-        '<div class="qty-controls">' +
-          '<span class="qty-lbl">Qty:</span>' +
-          '<button class="qty-btn" onclick="adjustQty(' + item.id + ',-1);event.stopPropagation();">−</button>' +
-          '<span class="qty-num" id="qn-' + item.id + '">' + item.qty + '</span>' +
-          '<button class="qty-btn" onclick="adjustQty(' + item.id + ',1);event.stopPropagation();">+</button>' +
-        '</div>' +
-        '<div class="card-actions">' +
-          '<button class="success-btn" onclick="syncSingleItem(' + item.id + ');event.stopPropagation();">Sync to Sheets</button>' +
-          '<button class="danger-btn" onclick="deleteItem(' + item.id + ');event.stopPropagation();">Delete</button>' +
-        '</div>' +
-      '</div>' +
-    '</div>';
+  var total=inventory.reduce(function(s,i){return s+i.qty;},0);
+  var batches=[...new Set(inventory.map(function(i){return i.batchNum;}))].length;
+  var totalVal=inventory.reduce(function(s,i){return s+(i.price||0)*i.qty;},0);
+  document.getElementById('stats-row').innerHTML=
+    '<div class="stat-card"><div class="num">'+inventory.length+'</div><div class="lbl">Items</div></div>'+
+    '<div class="stat-card"><div class="num">'+total+'</div><div class="lbl">Total qty</div></div>'+
+    '<div class="stat-card"><div class="num">'+batches+'</div><div class="lbl">Batches</div></div>'+
+    '<div class="stat-card"><div class="num">$'+totalVal.toFixed(0)+'</div><div class="lbl">Value</div></div>';
+  if(!filtered.length){list.innerHTML='<div class="empty-state">'+(inventory.length?'No results.':'No items yet \u2014 add your first!')+'</div>';return;}
+  var tagColor={Tops:'tag-blue',Bottoms:'tag-blue',Outerwear:'tag-amber',Dresses:'tag-green',Footwear:'tag-amber',Accessories:'tag-green',Other:'tag-blue'};
+  list.innerHTML=filtered.map(function(item){
+    return'<div class="item-card">'+
+    '<div class="card-header" onclick="toggleCard('+item.id+')">'+(item.photo?'<img class="item-thumb" src="'+item.photo+'">':'<div class="item-thumb">'+catEmoji(item.category)+'</div>')+
+    '<div class="item-info"><div class="iname">'+item.name+'</div>'+
+    '<div class="imeta"><b>'+item.itemNo+'</b> \u00b7 <span class="tag '+(tagColor[item.category]||'tag-blue')+'">'+item.category+'</span>'+(item.size?' \u00b7 '+item.size:'')+
+    (item.price?' \u00b7 <span class="price-tag">$'+parseFloat(item.price).toFixed(2)+'</span>':'')+
+    ' <span style="font-size:10px;color:'+(item.synced?'#27ae60':'#f39c12')+'">'+(item.synced?'\u25cf synced':'\u25cf local')+'</span></div></div>'+
+    '<div class="qty-badge">\u00d7'+item.qty+'</div></div>'+
+    '<div class="card-body" id="body-'+item.id+'">'+(item.photo?'<img src="'+item.photo+'" style="width:100%;max-height:200px;object-fit:cover;border-radius:8px;margin-bottom:10px;">':'')+
+    '<div class="dr"><span>Item #</span><span><b>'+item.itemNo+'</b></span></div>'+
+    '<div class="dr"><span>Batch</span><span>'+pad3(item.batchNum)+'</span></div>'+
+    '<div class="dr"><span>Barcode</span><span>'+item.barcode+'</span></div>'+
+    (item.size?'<div class="dr"><span>Size</span><span>'+item.size+'</span></div>':'')+
+    (item.color?'<div class="dr"><span>Color</span><span>'+item.color+'</span></div>':'')+
+    (item.price?'<div class="dr"><span>Price</span><span><b>$'+parseFloat(item.price).toFixed(2)+'</b></span></div>':'')+
+    (item.notes?'<div class="dr"><span>Notes</span><span>'+item.notes+'</span></div>':'')+
+    '<div class="dr"><span>Added</span><span>'+item.added+'</span></div>'+
+    '<div class="barcode-wrap"><canvas id="bc-'+item.id+'"></canvas><div class="bc-num">'+item.barcode+'</div></div>'+
+    '<div class="qty-controls"><span class="qty-lbl">Qty:</span>'+
+    '<button class="qty-btn" onclick="adjustQty('+item.id+',-1)">\u2212</button>'+
+    '<span class="qty-num" id="qn-'+item.id+'">'+item.qty+'</span>'+
+    '<button class="qty-btn" onclick="adjustQty('+item.id+',1)">+</button></div>'+
+    '<div class="card-actions">'+
+    (item.photo?'<button class="secondary-btn" onclick="saveItemPhotoFromCard('+item.id+')">💾 Save Photo</button>':'')+
+    '<button class="success-btn" onclick="syncSingleItem('+item.id+')">Sync</button>'+
+    '<button class="danger-btn" onclick="deleteItem('+item.id+')">Delete</button></div>'+
+    '</div></div>';
   }).join('');
-
   filtered.forEach(function(item){
-    try {
-      JsBarcode('#bc-' + item.id, item.barcode, {
-        format:'CODE128',
-        width:1.5,
-        height:46,
-        displayValue:false,
-        background:'#fff',
-        lineColor:'#1a1a1a'
-      });
-    } catch (e) {
-      console.error('Barcode render error:', e);
-    }
+    try{JsBarcode('#bc-'+item.id,item.barcode,{format:'CODE128',width:1.5,height:46,displayValue:false,background:'#fff',lineColor:'#1a1a1a'});}catch(e){}
   });
 }
-
 function updateFilters(){
-  var batches = [...new Set(inventory.map(function(i){ return i.batchNum; }))].sort(function(a,b){ return a-b; });
-  var cats = [...new Set(inventory.map(function(i){ return i.category; }))].sort();
-  var fb = document.getElementById('filter-batch');
-  var fc = document.getElementById('filter-cat');
-  var selB = fb.value;
-  var selC = fc.value;
-
-  fb.innerHTML = '<option value="">All batches</option>' + batches.map(function(b){
-    return '<option value="' + b + '" ' + (String(b) === selB ? 'selected' : '') + '>' + pad3(b) + '</option>';
-  }).join('');
-
-  fc.innerHTML = '<option value="">All categories</option>' + cats.map(function(c){
-    return '<option value="' + c + '" ' + (c === selC ? 'selected' : '') + '>' + escapeHtml(c) + '</option>';
-  }).join('');
+  var batches=[...new Set(inventory.map(function(i){return i.batchNum;}))].sort(function(a,b){return a-b;});
+  var cats=[...new Set(inventory.map(function(i){return i.category;}))].sort();
+  var fb=document.getElementById('filter-batch'),fc=document.getElementById('filter-cat');
+  var selB=fb.value,selC=fc.value;
+  fb.innerHTML='<option value="">All batches</option>'+batches.map(function(b){return'<option value="'+b+'" '+(String(b)===selB?'selected':'')+'>'+pad3(b)+'</option>';}).join('');
+  fc.innerHTML='<option value="">All categories</option>'+cats.map(function(c){return'<option value="'+c+'" '+(c===selC?'selected':'')+'>'+c+'</option>';}).join('');
 }
-
-function toggleCard(id){
-  document.getElementById('body-' + id).classList.toggle('open');
+function toggleCard(id){document.getElementById('body-'+id).classList.toggle('open');}
+function adjustQty(id,delta){
+  var item=inventory.find(function(i){return i.id===id;});if(!item)return;
+  item.qty=Math.max(0,item.qty+delta);item.synced=false;
+  document.getElementById('qn-'+id).textContent=item.qty;save();
 }
-
-function adjustQty(id, delta){
-  var item = inventory.find(function(i){ return i.id === id; });
-  if (!item) return;
-  item.qty = Math.max(0, item.qty + delta);
-  item.synced = false;
-  save();
-  var qn = document.getElementById('qn-' + id);
-  if (qn) qn.textContent = item.qty;
-}
-
 function deleteItem(id){
-  if (!confirm('Remove this item?')) return;
-  inventory = inventory.filter(function(i){ return i.id !== id; });
-  save();
-  updateFilters();
-  renderInventory();
+  if(!confirm('Remove this item?'))return;
+  inventory=inventory.filter(function(i){return i.id!==id;});
+  save();renderInventory();updateFilters();
 }
-
-async function buildRow(i){
-  var photo = null;
-  if (i.photo && !i.photoUrl) {
-    try {
-      photo = await compressPhoto(i.photo);
-    } catch (e) {
-      console.error('Photo compression failed:', e);
-      photo = null;
-    }
-  }
-
-  return {
-    itemNo: i.itemNo,
-    batch: pad3(i.batchNum),
-    itemSeq: String(i.itemSeq).padStart(3, '0'),
-    name: i.name,
-    barcode: i.barcode,
-    category: i.category,
-    size: i.size || '',
-    color: i.color || '',
-    qty: i.qty,
-    notes: i.notes || '',
-    added: i.added,
-    photo: photo
-  };
-}
-
 async function syncToSheets(){
-  var url = settings.appsScriptUrl;
-  if (!settings.sheetId || !url) {
-    showToast('Add both Sheet ID and Apps Script URL in Settings');
-    showTab('settings');
-    return;
-  }
-
-  var unsynced = inventory.filter(function(i){ return !i.synced; });
-  if (!unsynced.length) {
-    showToast('All items already synced!');
-    return;
-  }
-
-  showToast('Syncing ' + unsynced.length + ' item(s)...');
-
-  try {
-    var rows = [];
-    for (var i = 0; i < unsynced.length; i++) {
-      rows.push(await buildRow(unsynced[i]));
-    }
-
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        sheetId: settings.sheetId,
-        tab: SHEET_TAB,
-        rows: rows
-      })
+  var url=settings.appsScriptUrl;
+  if(!url){showToast('Add Apps Script URL in Settings');showTab('settings');return;}
+  var unsynced=inventory.filter(function(i){return!i.synced;});
+  if(!unsynced.length){showToast('All items already synced!');return;}
+  showToast('Syncing '+unsynced.length+' item(s)...');
+  try{
+    var rows=unsynced.map(function(i){
+      return[i.itemNo,pad3(i.batchNum),String(i.itemSeq).padStart(3,'0'),i.name,i.barcode,
+        i.category,i.size||'',i.color||'',i.qty,i.price||0,i.notes||'',i.added];
     });
-
-    if (!res.ok) {
-      throw new Error('HTTP ' + res.status);
-    }
-
-    var data = await res.json();
-
-    if (!data.ok) {
-      showToast('Sync error: ' + (data.error || 'unknown'));
-      console.error('Sync error:', data);
-      return;
-    }
-
-    if (Array.isArray(data.photoUrls)) {
-      data.photoUrls.forEach(function(p){
-        var item = inventory.find(function(i){ return i.itemNo === p.itemNo; });
-        if (item) item.photoUrl = p.url;
-      });
-    }
-
-    unsynced.forEach(function(i){ i.synced = true; });
-    save();
-
-    if (data.errors && data.errors.length) {
-      console.error('Partial sync errors:', data.errors);
-      showToast('Rows synced, but some photos failed.');
-    } else {
-      showToast('Synced ' + unsynced.length + ' item(s)!');
-    }
-
-    document.getElementById('sync-dot').className = 'dot green';
-    document.getElementById('sync-status').textContent = 'Last sync: ' + new Date().toLocaleTimeString();
-
-    updateFilters();
-    renderInventory();
-  } catch (e) {
-    console.error(e);
-    showToast('Sync failed — check script deployment, permissions, and network');
-  }
+    var res=await fetch(url,{method:'POST',body:JSON.stringify({sheetId:settings.sheetId,tab:SHEET_TAB,rows:rows})});
+    var data=await res.json();
+    if(data.ok){
+      unsynced.forEach(function(i){i.synced=true;});
+      save();
+      showToast('Synced '+unsynced.length+' item(s)!');
+      document.getElementById('sync-dot').className='dot green';
+      document.getElementById('sync-status').textContent='Last sync: '+new Date().toLocaleTimeString();
+      renderInventory();
+    }else showToast('Sync error: '+(data.error||'unknown'));
+  }catch(e){showToast('Sync failed \u2014 check URL & network');}
 }
-
 async function syncSingleItem(id){
-  var item = inventory.find(function(i){ return i.id === id; });
-  if (!item) return;
-
-  var url = settings.appsScriptUrl;
-  if (!settings.sheetId || !url) {
-    showToast('Add both Sheet ID and Apps Script URL in Settings');
-    showTab('settings');
-    return;
-  }
-
-  showToast('Syncing ' + item.itemNo + '...');
-
-  try {
-    var row = await buildRow(item);
-    var res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify({
-        sheetId: settings.sheetId,
-        tab: SHEET_TAB,
-        rows: [row]
-      })
-    });
-
-    if (!res.ok) {
-      throw new Error('HTTP ' + res.status);
-    }
-
-    var data = await res.json();
-
-    if (!data.ok) {
-      showToast('Error: ' + (data.error || 'unknown'));
-      console.error('Single sync error:', data);
-      return;
-    }
-
-    if (data.photoUrls && data.photoUrls.length) {
-      item.photoUrl = data.photoUrls[0].url;
-    }
-
-    item.synced = true;
-    save();
-
-    if (data.errors && data.errors.length) {
-      console.error('Single item partial errors:', data.errors);
-      showToast('Item synced, but photo failed.');
-    } else {
-      showToast('Synced!');
-    }
-
-    renderInventory();
-  } catch (e) {
-    console.error(e);
-    showToast('Sync failed');
-  }
+  var item=inventory.find(function(i){return i.id===id;});if(!item)return;
+  var url=settings.appsScriptUrl;
+  if(!url){showToast('Add Apps Script URL in Settings');showTab('settings');return;}
+  showToast('Syncing '+item.itemNo+'...');
+  try{
+    var row=[item.itemNo,pad3(item.batchNum),String(item.itemSeq).padStart(3,'0'),item.name,item.barcode,
+      item.category,item.size||'',item.color||'',item.qty,item.price||0,item.notes||'',item.added];
+    var res=await fetch(url,{method:'POST',body:JSON.stringify({sheetId:settings.sheetId,tab:SHEET_TAB,rows:[row]})});
+    var data=await res.json();
+    if(data.ok){item.synced=true;save();showToast('Synced!');renderInventory();}
+    else showToast('Error: '+(data.error||'unknown'));
+  }catch(e){showToast('Sync failed');}
 }
-
 function exportCSV(){
-  if (!inventory.length) {
-    showToast('No items to export');
-    return;
-  }
-
-  var rows = [['Item #','Batch','Item Seq','Name','Barcode','Category','Size','Color','Qty','Notes','Added','Photo Link']];
-  inventory.forEach(function(i){
-    rows.push([
-      i.itemNo,
-      pad3(i.batchNum),
-      String(i.itemSeq).padStart(3,'0'),
-      i.name,
-      i.barcode,
-      i.category,
-      i.size || '',
-      i.color || '',
-      i.qty,
-      i.notes || '',
-      i.added,
-      i.photoUrl || ''
-    ]);
-  });
-
-  var csv = rows.map(function(r){
-    return r.map(function(c){
-      return '"' + String(c || '').replace(/"/g,'""') + '"';
-    }).join(',');
-  }).join('\n');
-
-  var a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([csv], { type:'text/csv' }));
-  a.download = 'AnnaOutlet_Inventory.csv';
-  a.click();
+  if(!inventory.length){showToast('No items to export');return;}
+  var rows=[['Item #','Batch','Item Seq','Name','Barcode','Category','Size','Color','Qty','Price','Notes','Added']];
+  inventory.forEach(function(i){rows.push([i.itemNo,pad3(i.batchNum),String(i.itemSeq).padStart(3,'0'),i.name,i.barcode,i.category,i.size||'',i.color||'',i.qty,i.price||0,i.notes||'',i.added]);});
+  var csv=rows.map(function(r){return r.map(function(c){return'"'+String(c||'').replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='AnnaOutlet_Inventory.csv';a.click();
 }
-
 function clearAll(){
-  if (!confirm('Delete ALL data? This cannot be undone.')) return;
-  inventory = [];
-  save();
-  updateFilters();
-  renderInventory();
-  showToast('All data cleared');
+  if(!confirm('Delete ALL data? This cannot be undone.'))return;
+  inventory=[];save();renderInventory();showToast('All data cleared');
 }
-
 function showToast(msg){
-  var t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); }, 2800);
+  var t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2800);
 }
-
 function copyAppsScript(){
-  var code = `function doPost(e) {
-  try {
-    var data = JSON.parse(e.postData.contents);
-    var ss = SpreadsheetApp.openById(data.sheetId);
-    var tabName = data.tab || "AnnaOutlet Inventory";
-    var sheet = ss.getSheetByName(tabName);
-
-    if (!sheet) sheet = ss.insertSheet(tabName);
-
-    if (sheet.getLastRow() === 0) {
-      sheet.appendRow([
-        "Item #","Batch","Item Seq","Name","Barcode","Category",
-        "Size","Color","Qty","Notes","Added","Photo Link"
-      ]);
-    }
-
-    var results = { ok: true, photoUrls: [], errors: [] };
-
-    data.rows.forEach(function(item) {
-      var photoUrl = "";
-
-      if (item.photo) {
-        try {
-          var parentFolders = DriveApp.getFoldersByName("AnnaOutlet Inventory Photos");
-          var parentFolder = parentFolders.hasNext()
-            ? parentFolders.next()
-            : DriveApp.createFolder("AnnaOutlet Inventory Photos");
-
-          var batchFolderName = "Batch " + item.batch;
-          var batchFolders = parentFolder.getFoldersByName(batchFolderName);
-          var batchFolder = batchFolders.hasNext()
-            ? batchFolders.next()
-            : parentFolder.createFolder(batchFolderName);
-
-          var parts = item.photo.split(",");
-          if (parts.length < 2) throw new Error("Invalid photo data URL");
-
-          var meta = parts[0];
-          var base64 = parts[1];
-          var mimeType = meta.split(";")[0].split(":")[1];
-          var ext = mimeType === "image/png" ? ".png" : ".jpg";
-
-          var blob = Utilities.newBlob(
-            Utilities.base64Decode(base64),
-            mimeType,
-            item.itemNo + ext
-          );
-
-          var file = batchFolder.createFile(blob);
-          file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-          photoUrl = file.getUrl();
-
-          results.photoUrls.push({ itemNo: item.itemNo, url: photoUrl });
-        } catch (err) {
-          results.errors.push({
-            itemNo: item.itemNo,
-            stage: "photo_upload",
-            error: String(err)
-          });
-        }
-      }
-
-      sheet.appendRow([
-        item.itemNo, item.batch, item.itemSeq, item.name, item.barcode,
-        item.category, item.size, item.color, item.qty, item.notes,
-        item.added, photoUrl
-      ]);
-    });
-
-    return ContentService
-      .createTextOutput(JSON.stringify(results))
-      .setMimeType(ContentService.MimeType.JSON);
-
-  } catch (err) {
-    return ContentService
-      .createTextOutput(JSON.stringify({
-        ok: false,
-        error: String(err)
-      }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
-}`;
-  navigator.clipboard.writeText(code)
-    .then(function(){ showToast('Apps Script code copied!'); })
-    .catch(function(){ showToast('Copy failed'); });
+  var code='function doPost(e) {\n  var data = JSON.parse(e.postData.contents);\n  var ss = SpreadsheetApp.openById(data.sheetId);\n  var sheet = ss.getSheetByName(data.tab || "AnnaOutlet Inventory");\n  if (!sheet) sheet = ss.insertSheet(data.tab || "AnnaOutlet Inventory");\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow(["Item #","Batch","Item Seq","Name","Barcode","Category","Size","Color","Qty","Price","Notes","Added"]);\n  }\n  data.rows.forEach(function(row) { sheet.appendRow(row); });\n  return ContentService.createTextOutput(JSON.stringify({ok: true})).setMimeType(ContentService.MimeType.JSON);\n}';
+  navigator.clipboard.writeText(code).then(function(){showToast('Apps Script code copied!');}).catch(function(){showToast('Copy failed');});
 }
-
-async function openScanner(){
-  var modal = document.getElementById('scanner-modal');
-  var status = document.getElementById('scan-status');
-  var video = document.getElementById('scanner-video');
-  var reader = document.getElementById('reader');
-
-  await closeScanner(true);
-
-  modal.classList.add('open');
-  status.textContent = 'Starting camera...';
-  video.style.display = 'block';
-  reader.style.display = 'none';
-
-  if (!window.isSecureContext) {
-    status.textContent = 'Camera requires HTTPS or localhost.';
-    return;
-  }
-
-  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
-    status.textContent = 'Camera API not supported on this device/browser.';
-    return;
-  }
-
-  try {
-    scanStream = await navigator.mediaDevices.getUserMedia({
-      video: { facingMode: { ideal: 'environment' } },
-      audio: false
-    });
-
-    video.srcObject = scanStream;
-    await video.play();
-
-    if ('BarcodeDetector' in window) {
-      scannerMode = 'native';
-      status.textContent = 'Scanning...';
+function openScanner(){
+  document.getElementById('scanner-modal').classList.add('open');
+  navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}})
+    .then(function(stream){
+      scanStream=stream;
+      var v=document.getElementById('scanner-video');
+      v.srcObject=stream;v.play();
+      document.getElementById('scan-status').textContent='Scanning...';
       startFrameScan();
-      return;
-    }
-
-    if (typeof Html5Qrcode !== 'undefined') {
-      scannerMode = 'html5-qrcode';
-      scanStream.getTracks().forEach(function(t){ t.stop(); });
-      scanStream = null;
-      video.style.display = 'none';
-      reader.style.display = 'block';
-      status.textContent = 'Scanning...';
-      await startHtml5QrcodeScanner();
-      return;
-    }
-
-    status.textContent = 'No supported barcode scanner found. Type barcode manually.';
-  } catch (err) {
-    console.error('Camera error:', err);
-    status.textContent = 'Camera unavailable or permission denied.';
-  }
+    })
+    .catch(function(err){
+      document.getElementById('scan-status').textContent='Camera error: '+err.message;
+    });
 }
-
-async function startHtml5QrcodeScanner(){
-  var status = document.getElementById('scan-status');
-
-  try {
-    html5QrScanner = new Html5Qrcode('reader');
-    await html5QrScanner.start(
-      { facingMode: 'environment' },
-      { fps: 10, qrbox: { width: 220, height: 120 } },
-      function(decodedText) {
-        document.getElementById('f-barcode').value = decodedText;
-        status.textContent = 'Found: ' + decodedText;
-        setTimeout(function(){ closeScanner(); }, 500);
-      },
-      function() {}
-    );
-  } catch (err) {
-    console.error('html5-qrcode start error:', err);
-    status.textContent = 'Scanner failed to start. Type barcode manually.';
-  }
-}
-
-async function closeScanner(silent){
+function closeScanner(){
   document.getElementById('scanner-modal').classList.remove('open');
-
-  if (scanInterval) {
-    clearInterval(scanInterval);
-    scanInterval = null;
-  }
-
-  if (scanStream) {
-    scanStream.getTracks().forEach(function(t){ t.stop(); });
-    scanStream = null;
-  }
-
-  if (html5QrScanner) {
-    try {
-      await html5QrScanner.stop();
-    } catch (e) {}
-    try {
-      await html5QrScanner.clear();
-    } catch (e) {}
-    html5QrScanner = null;
-  }
-
-  scannerMode = null;
-  document.getElementById('scanner-video').srcObject = null;
-  document.getElementById('reader').style.display = 'none';
-  document.getElementById('scanner-video').style.display = 'block';
-  document.getElementById('scan-status').textContent = 'Scanning...';
-
-  if (!silent) {
-    // no-op
-  }
+  if(scanInterval){clearInterval(scanInterval);scanInterval=null;}
+  if(scanStream){scanStream.getTracks().forEach(function(t){t.stop();});scanStream=null;}
+  document.getElementById('scan-status').textContent='Scanning...';
 }
-
 function startFrameScan(){
-  if (!('BarcodeDetector' in window)) {
-    document.getElementById('scan-status').textContent = 'Barcode scanning not supported in this browser.';
+  if(!('BarcodeDetector' in window)){
+    document.getElementById('scan-status').textContent='Auto-scan not supported \u2014 type barcode manually.';
     return;
   }
-
-  var detector = new BarcodeDetector({
-    formats: ['code_128','ean_13','ean_8','upc_a','upc_e','code_39','qr_code']
-  });
-
-  var v = document.getElementById('scanner-video');
-  var c = document.getElementById('scanner-canvas');
-  var ctx = c.getContext('2d');
-
-  if (scanInterval) clearInterval(scanInterval);
-
-  scanInterval = setInterval(async function(){
-    if (!v.videoWidth || !v.videoHeight || v.readyState !== 4) return;
-
-    c.width = v.videoWidth;
-    c.height = v.videoHeight;
-    ctx.drawImage(v, 0, 0, c.width, c.height);
-
-    try {
-      var codes = await detector.detect(c);
-      if (codes && codes.length) {
-        document.getElementById('f-barcode').value = codes[0].rawValue;
-        document.getElementById('scan-status').textContent = 'Found: ' + codes[0].rawValue;
-        setTimeout(function(){ closeScanner(); }, 500);
+  var detector=new BarcodeDetector({formats:['code_128','ean_13','ean_8','upc_a','upc_e','qr_code','code_39','code_93','itf']});
+  var v=document.getElementById('scanner-video'),c=document.getElementById('scanner-canvas'),ctx=c.getContext('2d');
+  scanInterval=setInterval(async function(){
+    if(v.readyState!==v.HAVE_ENOUGH_DATA)return;
+    c.width=v.videoWidth;c.height=v.videoHeight;ctx.drawImage(v,0,0);
+    try{
+      var codes=await detector.detect(c);
+      if(codes.length){
+        document.getElementById('f-barcode').value=codes[0].rawValue;
+        document.getElementById('scan-status').textContent='\u2705 Found: '+codes[0].rawValue;
+        setTimeout(closeScanner,1200);
       }
-    } catch (e) {
-      console.error('Barcode detect error:', e);
-    }
-  }, 300);
+    }catch(e){}
+  },300);
 }
-
-function escapeHtml(value){
-  return String(value == null ? '' : value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
 loadSettings();
 updateItemNoPreview();
 </script>
