@@ -38,6 +38,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .scan-btn{width:100%;padding:13px;font-size:14px;font-weight:500;border:1px solid #ddd;border-radius:10px;background:#fff;color:#1a1a1a;cursor:pointer;margin-bottom:10px;display:flex;align-items:center;justify-content:center;gap:8px}
 .primary-btn{width:100%;padding:14px;font-size:15px;font-weight:700;border-radius:10px;background:#1a1a1a;color:#fff;border:none;cursor:pointer;margin-top:4px}
 .primary-btn:active{opacity:.85}
+.primary-btn:disabled{opacity:.5;cursor:not-allowed}
 .secondary-btn{padding:8px 13px;font-size:13px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a1a;cursor:pointer}
 .danger-btn{background:#c0392b;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600}
 .success-btn{background:#27ae60;color:#fff;border:none;padding:9px 14px;border-radius:8px;font-size:13px;cursor:pointer;font-weight:600}
@@ -86,12 +87,16 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .dot{width:8px;height:8px;border-radius:50%;background:#ccc;display:inline-block;flex-shrink:0;margin-right:6px}
 .dot.green{background:#27ae60}
 .dot.amber{background:#f39c12}
+.dot.red{background:#e74c3c}
 .sheet-badge{display:inline-block;background:#e8f5e9;color:#2e7d32;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;margin-bottom:10px}
+.autosync-badge{display:flex;align-items:center;gap:6px;background:#e8f5e9;border:1px solid #a5d6a7;border-radius:8px;padding:8px 12px;margin-bottom:12px;font-size:12px;color:#2e7d32;font-weight:500}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a1a1a;color:#fff;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:500;z-index:200;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center}
 .toast.show{opacity:1}
 .currency{position:relative}
 .currency-symbol{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:#888;font-size:15px;pointer-events:none}
 .currency input{padding-left:24px}
+.adding-spinner{display:inline-block;width:16px;height:16px;border:2px solid #fff;border-top-color:transparent;border-radius:50%;animation:spin .6s linear infinite;vertical-align:middle;margin-right:6px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
@@ -146,7 +151,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>
       Scan Barcode with Camera
     </button>
-    <button class="primary-btn" onclick="addItem()">Add to Inventory</button>
+    <button class="primary-btn" id="add-btn" onclick="addItem()">Add to Inventory</button>
   </div>
 
   <div class="panel" id="panel-inventory">
@@ -163,13 +168,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
     <div class="sheets-section">
       <h3>Google Sheets Sync</h3>
       <div><span class="sheet-badge">Tab: AnnaOutlet Inventory</span></div>
+      <div class="autosync-badge">
+        <span>⚡</span>
+        <span>Auto-sync ON — every item saves to Sheets instantly when added</span>
+      </div>
       <div class="field"><label>Sheet ID (from URL)</label><input type="text" id="sheet-id" placeholder="Paste Sheet ID here" oninput="saveSettings()"></div>
       <div class="field"><label>Apps Script Web App URL</label><input type="text" id="apps-script-url" placeholder="https://script.google.com/macros/s/.../exec" oninput="saveSettings()"></div>
       <div style="display:flex;align-items:center;margin-bottom:12px;">
         <span class="dot" id="sync-dot"></span>
         <span id="sync-status" style="font-size:13px;color:#888;">Not configured</span>
       </div>
-      <button class="success-btn" style="width:100%;padding:13px;font-size:15px;margin-bottom:10px;" onclick="syncToSheets()">Sync Now</button>
+      <button class="success-btn" style="width:100%;padding:13px;font-size:15px;margin-bottom:10px;" onclick="syncToSheets()">Sync All Unsynced Items</button>
       <button class="warn-btn" onclick="resetSyncStatus()">Force Re-Sync All Items</button>
       <button class="scan-btn" onclick="copyAppsScript()">Copy Apps Script Code</button>
     </div>
@@ -198,7 +207,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
   </div>
 </div>
 <div class="toast" id="toast"></div>
-<canvas id="compress-canvas" style="display:none"></canvas>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jsbarcode/3.11.5/JsBarcode.all.min.js"></script>
 <script>
@@ -244,15 +252,15 @@ function loadSettings(){
 }
 function updateSyncStatus(){
   var dot=document.getElementById('sync-dot'),txt=document.getElementById('sync-status');
-  if(settings.appsScriptUrl){dot.className='dot green';txt.textContent='Ready to sync';}
-  else if(settings.sheetId){dot.className='dot amber';txt.textContent='Add Apps Script URL';}
-  else{dot.className='dot';txt.textContent='Not configured';}
+  if(settings.appsScriptUrl){dot.className='dot green';txt.textContent='Auto-sync active \u2014 items save instantly';}
+  else if(settings.sheetId){dot.className='dot amber';txt.textContent='Add Apps Script URL to enable auto-sync';}
+  else{dot.className='dot red';txt.textContent='Not configured \u2014 go to Settings';}
 }
 function resetSyncStatus(){
   if(!confirm('This will resend all items to Google Sheets. Continue?'))return;
   inventory.forEach(function(i){i.synced=false;});
   save();
-  showToast('All items marked for re-sync. Tap Sync Now!');
+  showToast('All items marked for re-sync. Tap Sync now!');
 }
 function handlePhoto(e){
   var file=e.target.files[0];if(!file)return;
@@ -266,17 +274,14 @@ function handlePhoto(e){
   };
   r.readAsDataURL(file);
 }
-
 function savePhotoToDevice(){
   if(!photoDataUrl){showToast('No photo to save');return;}
-  var itemNo=currentItemNo;
   var a=document.createElement('a');
   a.href=photoDataUrl;
-  a.download=itemNo+'.jpg';
+  a.download=currentItemNo+'.jpg';
   a.click();
-  showToast('Photo saved as '+itemNo+'.jpg — upload to Drive!');
+  showToast('Saved as '+currentItemNo+'.jpg \u2014 upload to Drive!');
 }
-
 function saveItemPhotoFromCard(id){
   var item=inventory.find(function(i){return i.id===id;});
   if(!item||!item.photo){showToast('No photo for this item');return;}
@@ -284,10 +289,32 @@ function saveItemPhotoFromCard(id){
   a.href=item.photo;
   a.download=item.itemNo+'.jpg';
   a.click();
-  showToast('Photo saved as '+item.itemNo+'.jpg');
+  showToast('Saved as '+item.itemNo+'.jpg');
 }
 
-function addItem(){
+// AUTO-SYNC: sends item to Sheets immediately after adding
+async function autoSyncItem(item){
+  var url=settings.appsScriptUrl;
+  if(!url)return; // no URL configured, skip silently
+  try{
+    var row=[item.itemNo,pad3(item.batchNum),String(item.itemSeq).padStart(3,'0'),item.name,
+      item.barcode,item.category,item.size||'',item.color||'',item.qty,item.price||0,item.notes||'',item.added];
+    var res=await fetch(url,{method:'POST',body:JSON.stringify({sheetId:settings.sheetId,tab:SHEET_TAB,rows:[row]})});
+    var data=await res.json();
+    if(data.ok){
+      item.synced=true;
+      save();
+      showToast('\u2705 '+item.itemNo+' added & saved to Sheets!');
+      renderInventory();
+    } else {
+      showToast('\u26a0\ufe0f Saved locally \u2014 tap Sync to retry');
+    }
+  }catch(e){
+    showToast('\u26a0\ufe0f Saved locally \u2014 tap Sync when online');
+  }
+}
+
+async function addItem(){
   var name=document.getElementById('f-name').value.trim();
   if(!name){showToast('Please enter an item name');return;}
   var batch=parseInt(document.getElementById('f-batch').value)||settings.currentBatch;
@@ -306,7 +333,11 @@ function addItem(){
     notes:document.getElementById('f-notes').value.trim(),
     photo:photoDataUrl,
     added:new Date().toLocaleDateString(),synced:false};
+
+  // Save locally first
   inventory.unshift(item);save();
+
+  // Reset form
   ['f-name','f-barcode','f-size','f-color','f-notes'].forEach(function(id){document.getElementById(id).value='';});
   document.getElementById('f-qty').value='1';
   document.getElementById('f-price').value='';
@@ -318,14 +349,25 @@ function addItem(){
   document.getElementById('photo-placeholder').style.display='';
   document.getElementById('photo-input').value='';
   document.getElementById('save-photo-btn').classList.remove('visible');
-  showToast('Added '+itemNo+' \u2014 '+name);
+
+  // Show saving state on button
+  var btn=document.getElementById('add-btn');
+  btn.disabled=true;
+  btn.innerHTML='<span class="adding-spinner"></span>Saving...';
+
+  // Auto-sync to Sheets immediately
+  await autoSyncItem(item);
+
+  // Re-enable button
+  btn.disabled=false;
+  btn.innerHTML='Add to Inventory';
   updateItemNoPreview();
   showTab('inventory');
 }
+
 function catEmoji(cat){
   return{Tops:'\ud83d\udc55',Bottoms:'\ud83d\udc56',Outerwear:'\ud83e\udde5',Dresses:'\ud83d\udc57',Footwear:'\ud83d\udc5f',Accessories:'\ud83d\udc5c',Other:'\ud83d\udce6'}[cat]||'\ud83d\udc54';
 }
-function formatPrice(p){return p?'$'+parseFloat(p).toFixed(2):'';}
 function renderInventory(){
   var q=(document.getElementById('search-input').value||'').toLowerCase();
   var fb=document.getElementById('filter-batch').value;
@@ -368,8 +410,8 @@ function renderInventory(){
     '<span class="qty-num" id="qn-'+item.id+'">'+item.qty+'</span>'+
     '<button class="qty-btn" onclick="adjustQty('+item.id+',1)">+</button></div>'+
     '<div class="card-actions">'+
-    (item.photo?'<button class="secondary-btn" onclick="saveItemPhotoFromCard('+item.id+')">💾 Save Photo</button>':'')+
-    '<button class="success-btn" onclick="syncSingleItem('+item.id+')">Sync</button>'+
+    (item.photo?'<button class="secondary-btn" onclick="saveItemPhotoFromCard('+item.id+')">💾 Photo</button>':'')+
+    (!item.synced?'<button class="success-btn" onclick="syncSingleItem('+item.id+')">Sync</button>':'')+
     '<button class="danger-btn" onclick="deleteItem('+item.id+')">Delete</button></div>'+
     '</div></div>';
   }).join('');
@@ -412,7 +454,7 @@ async function syncToSheets(){
     if(data.ok){
       unsynced.forEach(function(i){i.synced=true;});
       save();
-      showToast('Synced '+unsynced.length+' item(s)!');
+      showToast('\u2705 Synced '+unsynced.length+' item(s)!');
       document.getElementById('sync-dot').className='dot green';
       document.getElementById('sync-status').textContent='Last sync: '+new Date().toLocaleTimeString();
       renderInventory();
@@ -429,7 +471,7 @@ async function syncSingleItem(id){
       item.category,item.size||'',item.color||'',item.qty,item.price||0,item.notes||'',item.added];
     var res=await fetch(url,{method:'POST',body:JSON.stringify({sheetId:settings.sheetId,tab:SHEET_TAB,rows:[row]})});
     var data=await res.json();
-    if(data.ok){item.synced=true;save();showToast('Synced!');renderInventory();}
+    if(data.ok){item.synced=true;save();showToast('\u2705 Synced!');renderInventory();}
     else showToast('Error: '+(data.error||'unknown'));
   }catch(e){showToast('Sync failed');}
 }
@@ -449,7 +491,7 @@ function clearAll(){
 function showToast(msg){
   var t=document.getElementById('toast');
   t.textContent=msg;t.classList.add('show');
-  setTimeout(function(){t.classList.remove('show');},2800);
+  setTimeout(function(){t.classList.remove('show');},3000);
 }
 function copyAppsScript(){
   var code='function doPost(e) {\n  var data = JSON.parse(e.postData.contents);\n  var ss = SpreadsheetApp.openById(data.sheetId);\n  var sheet = ss.getSheetByName(data.tab || "AnnaOutlet Inventory");\n  if (!sheet) sheet = ss.insertSheet(data.tab || "AnnaOutlet Inventory");\n  if (sheet.getLastRow() === 0) {\n    sheet.appendRow(["Item #","Batch","Item Seq","Name","Barcode","Category","Size","Color","Qty","Price","Notes","Added"]);\n  }\n  data.rows.forEach(function(row) { sheet.appendRow(row); });\n  return ContentService.createTextOutput(JSON.stringify({ok: true})).setMimeType(ContentService.MimeType.JSON);\n}';
